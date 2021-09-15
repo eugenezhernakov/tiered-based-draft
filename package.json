@@ -37,6 +37,8 @@
     ]
   },
   "devDependencies": {
-    "evergreen-ui": "^6.4.0"
+    "evergreen-ui": "^6.4.0",
+    "read-excel-file": "^5.2.10",
+    "xlsx": "^0.17.1"
   }
 }

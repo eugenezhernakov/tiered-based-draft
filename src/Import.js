@@ -1,50 +1,76 @@
-import { Pane, Heading, Avatar, Card , Badge, TimeIcon, Text, PeopleIcon, Button, TextInput, Spinner } from 'evergreen-ui';
+import { Pane, Heading, Table, TableHeaderCell,  } from 'evergreen-ui';
 import React, { Component } from 'react'
+import XLSX from 'xlsx'
 
 class Import extends Component {
   constructor(props) {
     super(props)
-    // this.fetchDrafts = this.fetchDrafts.bind(this)
+    this.handleFile = this.handleFile.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+    this.tableQB = this.tableQB.bind(this)
     this.state = {
-      userDrafts: []
+      userRankings: [],
+      columns: []
     }
   }
 
-  // fetchDrafts() {
-  //   let userID = this.props.location.player.user_id
-  //   let thisYear = new Date().getFullYear()
-  //   fetch('https://api.sleeper.app/v1/user/' + userID + '/drafts/nfl/' + thisYear)
-  //   .then(response => response.json())
-  //   .then((result) => {
-  //     this.setState({
-  //       userDrafts: result
-  //     })
-  //   })
-  // }
+	handleFile = (file) => {
+		const reader = new FileReader();
+		reader.onload = (e) => {
+			/* Parse data */
+			const ab = e.target.result;
+			const wb = XLSX.read(ab, {type:'array'});
+			/* Get first worksheet */
+			const wsname = wb.SheetNames[0];
+			const ws = wb.Sheets[wsname];
+			/* Convert array of arrays */
+			const data = XLSX.utils.sheet_to_json(ws, {header: 1, range: 'A2:B10'});
+			/* Update state */
+      console.log(data);
+      this.setState({userRankings: data})
+		};
+		reader.readAsArrayBuffer(file);
+	}
 
-  // componentDidMount() {
-  //   this.fetchDrafts()
-  // }
+  handleChange = (e) => {
+		const files = e.target.files;
+		if(files && files[0]) this.handleFile(files[0]);
+	}
+
+  tableQB() {
+    const { userRankings } = this.state
+    const regex = new RegExp('T[0-50]')
+    return (
+      <Table>
+        <Table.Head>
+          <TableHeaderCell>QB</TableHeaderCell>
+          <TableHeaderCell>WR</TableHeaderCell>
+        </Table.Head>
+        <Table.Body width={250}>
+          {userRankings.map((row) => {
+            return (
+              <Table.Row key={row}>
+                {regex.test(row[0]) ? <Table.TextCell><b>{row[0]}</b></Table.TextCell> : <Table.TextCell>{row[0]}</Table.TextCell>}
+                {regex.test(row[1]) ? <Table.TextCell><b>{row[1]}</b></Table.TextCell> : <Table.TextCell>{row[1]}</Table.TextCell>}
+              </Table.Row>
+            )
+          })}
+        </Table.Body>
+      </Table>
+    )
+  }
   
   render() {
-    // const { userDrafts } = this.state
-    // let draftList = userDrafts.map((draft) => {
-    //   let draftStatus = draft.status.replace('_', ' ')
-    //   let format = draft.metadata.scoring_type.replace('_', ' ')
+    const SheetJSFT = ["xlsx", "xlsb", "xlsm", "xls", "xml", "csv", "txt", "ods", 
+                       "fods", "uos", "sylk", "dif", "dbf", "prn", "qpw", "123", 
+                       "wb*", "wq*", "html", "htm"].map(x => `.${x}`).join(",")
+    // let tableQB = userRankings.map((player) => {
     //   return (
-    //     <li key={draft.draft_id}>
-    //       <Card display='flex' padding={16} background='tint2' border elevation={1} marginBottom={8}>
-    //         <Card flex={1} alignItems='center' display='flex'>
-    //           <Heading size={600} paddingRight={16}>{draft.metadata.name}</Heading>
-    //         </Card>
-    //         <Card display='flex' flexDirection='row'>
-    //           <Badge marginRight={8} color={draft.status === 'pre_draft' ? 'green' : 'blue'}>{draftStatus}</Badge>
-    //           <Pane display='flex' marginRight={8}><TimeIcon /><Text size={500} paddingLeft={4}>{draft.settings.pick_timer}</Text></Pane>
-    //           <Pane display='flex' marginRight={8}><PeopleIcon /><Text size={500} paddingLeft={4}>{draft.settings.teams}</Text></Pane>
-    //           <Badge marginRight={8} color='purple'>{format}</Badge>
-    //         </Card>  
-    //       </Card>
-    //     </li>
+    //     <Fragment>
+    //         <Table.Row key={player} isSelectable onSelect={() => alert(player)}>
+    //           <Table.TextCell>{player[1]}</Table.TextCell>
+    //         </Table.Row>
+    //     </Fragment>
     //   )
     // })
     return (
@@ -70,7 +96,10 @@ class Import extends Component {
         >
           <Pane id='user-card' padding={16} display='flex' flexDirection='column' alignItems='center' flex={1}>
             <Heading size={700} marginTop={8}>Import your tier-based rankings</Heading>
-            
+            <input type='file' id='file' accept={SheetJSFT} onChange={this.handleChange} />
+          </Pane>
+          <Pane padding={16} display='flex' flexDirection='column' alignItems='center' flex={1}>
+            {this.tableQB()}
           </Pane>
         </Pane>
       </Pane>
