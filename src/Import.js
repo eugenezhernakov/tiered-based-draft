@@ -1,4 +1,4 @@
-import { Pane, Heading, Table, TableHeaderCell,  } from 'evergreen-ui';
+import { Pane, Heading, Table, TableHeaderCell } from 'evergreen-ui';
 import React, { Component } from 'react'
 import XLSX from 'xlsx'
 
@@ -24,10 +24,11 @@ class Import extends Component {
 			const wsname = wb.SheetNames[0];
 			const ws = wb.Sheets[wsname];
 			/* Convert array of arrays */
-			const data = XLSX.utils.sheet_to_json(ws, {header: 1, range: 'A2:B10'});
+			const QBs = XLSX.utils.sheet_to_json(ws, {header: 1, range: 'A2:B10'});
 			/* Update state */
-      console.log(data);
-      this.setState({userRankings: data})
+      //this.setState({userRankings: data})
+      this.setState({userRankings: QBs})
+    console.log(this.state.userRankings)
 		};
 		reader.readAsArrayBuffer(file);
 	}
@@ -39,19 +40,18 @@ class Import extends Component {
 
   tableQB() {
     const { userRankings } = this.state
-    const regex = new RegExp('T[0-50]')
+    const regex = new RegExp('Tier [0-50]')
     return (
       <Table>
         <Table.Head>
           <TableHeaderCell>QB</TableHeaderCell>
-          <TableHeaderCell>WR</TableHeaderCell>
+          <TableHeaderCell>RB</TableHeaderCell>
         </Table.Head>
         <Table.Body width={250}>
           {userRankings.map((row) => {
             return (
               <Table.Row key={row}>
-                {regex.test(row[0]) ? <Table.TextCell><b>{row[0]}</b></Table.TextCell> : <Table.TextCell>{row[0]}</Table.TextCell>}
-                {regex.test(row[1]) ? <Table.TextCell><b>{row[1]}</b></Table.TextCell> : <Table.TextCell>{row[1]}</Table.TextCell>}
+                {regex.test(row[0]) ? <Table.TextCell><Heading size={700}>{row[0]}</Heading></Table.TextCell> : <Table.TextCell>{row[0]}</Table.TextCell>}
               </Table.Row>
             )
           })}
@@ -64,15 +64,6 @@ class Import extends Component {
     const SheetJSFT = ["xlsx", "xlsb", "xlsm", "xls", "xml", "csv", "txt", "ods", 
                        "fods", "uos", "sylk", "dif", "dbf", "prn", "qpw", "123", 
                        "wb*", "wq*", "html", "htm"].map(x => `.${x}`).join(",")
-    // let tableQB = userRankings.map((player) => {
-    //   return (
-    //     <Fragment>
-    //         <Table.Row key={player} isSelectable onSelect={() => alert(player)}>
-    //           <Table.TextCell>{player[1]}</Table.TextCell>
-    //         </Table.Row>
-    //     </Fragment>
-    //   )
-    // })
     return (
       <Pane
         minHeight='100vh'

@@ -24,7 +24,7 @@ class SelectDraft extends Component {
   }
 
   goToImport() {
-    this.props.history.push({pathname: '/import'})
+    this.props.history.push({pathname: '/draft'})
   }
 
   componentDidMount() {
@@ -38,7 +38,7 @@ class SelectDraft extends Component {
       let format = draft.metadata.scoring_type.replace('_', ' ')
       return (
         <li key={draft.draft_id}>
-          <Card display='flex' padding={16} background='tint2' border elevation={1} marginBottom={8}>
+          <Card display='flex' padding={16} background='tint2' border elevation={1} marginBottom={8} style={{cursor: 'pointer'}}>
             <Card flex={1} alignItems='center' display='flex'>
               <Heading size={600} paddingRight={16}>{draft.metadata.name}</Heading>
             </Card>
