@@ -1,0 +1,22 @@
+body {
+    background-color: #1F2233;
+    padding: 16px;
+  }
+
+input {
+    background-color: transparent;
+    font-size: 16px;
+    font-weight: 600;
+    color: #101840;
+    font-family: "SF UI Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    border: 0;
+  }
+  
+  input:hover {
+    cursor: pointer;
+    border: 1;
+  }
+
+  input:focus {
+      outline: none;
+  }

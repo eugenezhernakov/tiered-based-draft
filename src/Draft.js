@@ -24,21 +24,6 @@ const tierList = [
     }
 ]
 
-const players = [
-    {
-        id: '1',
-        title: 'First Item',
-    },
-    {
-        id: '2',
-        title: 'Second Item',
-    },
-    {
-        id: '3',
-        title: 'Third Item',
-    },
-]
-
 function Draft() {
     const [list, updateTierList] = useState(tierList)
 
@@ -78,12 +63,12 @@ function Draft() {
             borderRadius={16}
             minHeight={400}
             minWidth={200}
-            alignItems='stretch'
+            alignItems='center'
             display='flex'
             flexDirection='column'
             justifyContent='flex-start'
             >
-            <Heading>Tiers</Heading>
+            <Heading size={800} marginTop={8}>Running Back</Heading>
             <DragDropContext onDragEnd={handleOnDragEnd}>
                 <Droppable droppableId='list'>
                     {(provided) => (
@@ -115,32 +100,17 @@ function Draft() {
             </DragDropContext>
             </Pane>
             <Pane
-            backgroundColor='#d8dae5'
             borderRadius={16}
             minHeight={250}
             minWidth={250}
             alignItems='center'
             display='flex'
+            border
             flexDirection='column'
             justifyContent='flex-start'
             >
             <Heading>Draft</Heading>
-            </Pane> 
-            <Pane
-            backgroundColor='#d8dae5'
-            borderRadius={16}
-            minHeight={400}
-            minWidth={150}
-            alignItems='center'
-            display='flex'
-            flexDirection='column'
-            justifyContent='flex-start'
-            >
-            <Heading>Last 10 Picks</Heading>
-                {players.map(player => (
-                    <Player id={player.id} />
-                ))}
-            </Pane> 
+            </Pane>
         </Pane>              
       </Pane>        
     )
